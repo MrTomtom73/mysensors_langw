@@ -46,9 +46,9 @@ void startInclusionInterrupt() {
 
 void incomingMessage(const MyMessage &message) {
 //  if (mGetCommand(message) == C_PRESENTATION && inclusionMode) {
-//	gw.rxBlink(3);
+//  gw.rxBlink(3);
 //   } else {
-//	gw.rxBlink(1);
+//  gw.rxBlink(1);
 //   }
    // Pass along the message from sensors to serial line
    serial(PSTR("%d;%d;%d;%d;%d;%s\n"),message.sender, message.sensor, mGetCommand(message), mGetAck(message), message.type, message.getString(convBuf));
@@ -123,3 +123,4 @@ void setInclusionMode(boolean newMode) {
 #endif // ARDUINO
 
 #endif 
+

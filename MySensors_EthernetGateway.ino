@@ -56,7 +56,7 @@
  */
 #define NO_PORTB_PINCHANGES 
 
-#include <DigitalIO.h>     // This include can be removed when using UIPEthernet module  
+//#include <DigitalIO.h>     // This include can be removed when using UIPEthernet module  
 #include <SPI.h>  
 
 #include <MySigningNone.h>
@@ -69,15 +69,16 @@
 #include <MyParserSerial.h>  
 #include <MySensor.h>  
 #include <stdarg.h>
+
 #include <PinChangeInt.h>
 #include "GatewayUtil.h"
 
 
 // Use this if you have attached a Ethernet ENC28J60 shields  
-// #include <UIPEthernet.h>  
+#include <UIPEthernet.h>  
 
 // Use this for WizNET W5100 module and Arduino Ethernet Shield 
-#include <Ethernet.h>   
+// #include <Ethernet.h>   
 
 
 #define INCLUSION_MODE_TIME 1 // Number of minutes inclusion mode is enabled
@@ -92,7 +93,7 @@
 
 
 // NRFRF24L01 radio driver (set low transmit power by default) 
-MyTransportNRF24 transport(RADIO_CE_PIN, RADIO_SPI_SS_PIN, RF24_PA_LEVEL_GW);  
+MyTransportNRF24 transport(RF24_CE_PIN, RF24_CS_PIN, RF24_PA_LEVEL_GW);  
 //MyTransportRFM69 transport;
 
 // Message signing driver (signer needed if MY_SIGNING_FEATURE is turned on in MyConfig.h)
@@ -113,7 +114,7 @@ MySensor gw(transport, hw /*, signer*/);
 
 
 #define IP_PORT 5003        // The port you want to open 
-IPAddress myIp (192, 168, 178, 66);  // Configure your static ip-address here    COMPILE ERROR HERE? Use Arduino IDE 1.5.7 or later!
+IPAddress myIp (10, 195, 1, 180);  // Configure your static ip-address here    COMPILE ERROR HERE? Use Arduino IDE 1.5.7 or later!
 
 // The MAC address can be anything you want but should be unique on your network.
 // Newer boards have a MAC address printed on the underside of the PCB, which you can (optionally) use.
@@ -135,7 +136,7 @@ void output(const char *fmt, ... ) {
    vsnprintf_P(serialBuffer, MAX_SEND_LENGTH, fmt, args);
    va_end (args);
    Serial.print(serialBuffer);
-   server.write(serialBuffer);
+   client.write(serialBuffer);
 }
 
 void setup()  
@@ -177,7 +178,7 @@ void loop() {
        output(PSTR("0;0;%d;0;%d;Gateway startup complete.\n"),  C_INTERNAL, I_GATEWAY_READY);
      }
    }
-   		 
+        
    if (client) {
      if (!client.connected()) {
        client.stop();
@@ -211,6 +212,7 @@ void loop() {
     }
   }
 }
+
 
 
 
